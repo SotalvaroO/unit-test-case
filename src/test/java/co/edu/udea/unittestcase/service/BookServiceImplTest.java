@@ -90,7 +90,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         when(_bookRepository.save(book)).thenReturn(book);
         BookEntity updatedBook = _bookService.updateStock(14, 1L);
-        Assertions.assertThat(updatedBook.getStock()).isEqualTo(19);
+        Assertions.assertThat(updatedBook.getStock()).isEqualTo(20);
     }
 
     @Test
