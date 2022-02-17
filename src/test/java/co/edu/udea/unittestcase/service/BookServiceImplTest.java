@@ -68,6 +68,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         BookEntity found = _bookService.findBookByIsbn("9786124262883");
         Assertions.assertThat(found.getId()).isEqualTo(1L);
+        Assertions.assertThat(found).isNotNull();
     }
 
     @Test
@@ -90,7 +91,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         when(_bookRepository.save(book)).thenReturn(book);
         BookEntity updatedBook = _bookService.updateStock(14, 1L);
-        Assertions.assertThat(updatedBook.getStock()).isEqualTo(20);
+        Assertions.assertThat(updatedBook.getStock()).isEqualTo(21);
     }
 
     @Test
