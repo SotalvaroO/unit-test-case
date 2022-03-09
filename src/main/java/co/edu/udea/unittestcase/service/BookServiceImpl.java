@@ -27,7 +27,8 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public BookEntity findBookByIsbn(String isbn) {
-        return _bookRepository.findByIsbn(isbn).orElse(null);
+        BookEntity bookDB = _bookRepository.findByIsbn(isbn).orElse(null);
+        return bookDB;
     }
 
     @Override
@@ -36,7 +37,8 @@ public class BookServiceImpl implements IBookService {
         if (bookDB != null) {
             return null;
         }
-        return _bookRepository.save(book);
+        bookDB = _bookRepository.save(book);
+        return bookDB;
     }
 
     @Override
