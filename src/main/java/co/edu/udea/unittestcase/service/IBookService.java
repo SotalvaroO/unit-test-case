@@ -1,7 +1,6 @@
 package co.edu.udea.unittestcase.service;
 
 import co.edu.udea.unittestcase.model.BookEntity;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
