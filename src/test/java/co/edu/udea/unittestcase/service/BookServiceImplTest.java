@@ -25,6 +25,7 @@ class BookServiceImplTest {
     private IBookService _bookService;
 
     private BookEntity book;
+    private BookEntity duplicatedBook;
 
     @BeforeEach
     void setUp() {
@@ -33,6 +34,15 @@ class BookServiceImplTest {
 
         book = BookEntity.builder()
                 .id(1L)
+                .isbn("9786124262883")
+                .name("Agua Para Chocolate")
+                .synopsis("Obscenidades encima de un caballo")
+                .author("Laura Esquivel")
+                .stock(6)
+                .build();
+
+        duplicatedBook = BookEntity.builder()
+                .id(2L)
                 .isbn("9786124262883")
                 .name("Agua Para Chocolate")
                 .synopsis("Obscenidades encima de un caballo")
@@ -75,6 +85,7 @@ class BookServiceImplTest {
     void createBook() {
         when(_bookRepository.save(book)).thenReturn(book);
         assertNotNull(_bookService.createBook(book));
+        Assertions.assertThat(_bookService.createBook(duplicatedBook)).isNull();
     }
 
     @Test
@@ -83,6 +94,10 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         when(_bookRepository.save(book)).thenReturn(book);
         assertNotNull(_bookService.updateBook(book));
+
+        when(_bookRepository.findById(2L))
+                .thenReturn(Optional.of(duplicatedBook));
+        Assertions.assertThat(_bookService.updateBook(duplicatedBook)).isNull();
     }
 
     @Test
@@ -92,6 +107,11 @@ class BookServiceImplTest {
         when(_bookRepository.save(book)).thenReturn(book);
         BookEntity updatedBook = _bookService.updateStock(14, 1L);
         Assertions.assertThat(updatedBook.getStock()).isEqualTo(20);
+
+        when(_bookRepository.findById(2L))
+                .thenReturn(Optional.of(duplicatedBook));
+        BookEntity updatedBook2 = _bookService.updateStock(14, 2L);
+        Assertions.assertThat(updatedBook2).isNull();
     }
 
     @Test
@@ -99,5 +119,6 @@ class BookServiceImplTest {
         when(_bookRepository.findById(1L))
                 .thenReturn(Optional.of(book));
         assertNotNull(_bookService.deleteBookById(1L));
+        Assertions.assertThat(_bookService.deleteBookById(2L)).isNull();
     }
 }
