@@ -21,6 +21,7 @@ jobs:
         with:
           java-version: '11'
           distribution: 'temurin'
+          fetch-depth: 0
           cache: maven
       - name: Build with Maven
         run: mvn clean install

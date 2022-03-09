@@ -12,9 +12,5 @@ public interface IBookRepository extends JpaRepository<BookEntity, Long> {
 
     public Optional<BookEntity> findByIsbn(String isbn);
 
-//    @Transactional
-//    @Modifying
-//    @Query("UPDATE BookEntity b SET b.stock = ?1 WHERE b.id = ?2")
-//    public void updateStockById(int stock, Long id);
 
 }
