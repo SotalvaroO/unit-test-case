@@ -68,6 +68,7 @@ class BookServiceImplTest {
                 .thenReturn(Optional.of(book));
         BookEntity found = _bookService.findBookByIsbn("9786124262883");
         Assertions.assertThat(found.getId()).isEqualTo(1L);
+        Assertions.assertThat(found).isNotNull();
     }
 
     @Test
