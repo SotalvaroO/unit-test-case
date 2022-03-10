@@ -32,7 +32,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ResponseMessageEntity> findBookByid(@PathVariable Long id){
+    public ResponseEntity<ResponseMessageEntity> findBookById(@PathVariable Long id){
         ResponseMessageEntity response = new ResponseMessageEntity();
         BookEntity book = _bookService.findBookById(id);
         if (book == null) {
@@ -47,22 +47,22 @@ public class BookController {
     @PostMapping
     public ResponseEntity<ResponseMessageEntity> createBook(@RequestBody BookEntity book) {
         ResponseMessageEntity response = new ResponseMessageEntity();
-        BookEntity bookDB = _bookService.createBook(book);
-        if (bookDB == null) {
+        BookEntity bookDB = _bookService.findBookByIsbn(book.getIsbn());
+        if (bookDB != null) {
             response.setMessage("El libro ya existe");
-            response.setBody(_bookService.findBookByIsbn(book.getIsbn()));
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            response.setBody(bookDB);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
         response.setMessage("Creado con éxito!");
-        response.setBody(bookDB);
-        return ResponseEntity.ok(response);
+        response.setBody(_bookService.createBook(book));
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<ResponseMessageEntity> updateBook(@PathVariable Long id, @RequestBody BookEntity book) {
         book.setId(id);
         ResponseMessageEntity response = new ResponseMessageEntity();
-        BookEntity bookDB = _bookService.updateBook(book);
+        BookEntity bookDB = _bookService.findBookById(id);
         if (bookDB == null) {
             response.setMessage("El libro no existe");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
@@ -76,11 +76,12 @@ public class BookController {
     @GetMapping(value = "/{id}/{stock}")
     public ResponseEntity<ResponseMessageEntity> updateStock(@PathVariable Long id, @PathVariable int stock) {
         ResponseMessageEntity response = new ResponseMessageEntity();
-        BookEntity book = _bookService.updateStock(stock, id);
+        BookEntity book = _bookService.findBookById(id);
         if (book == null) {
             response.setMessage("El libro no existe");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+        book = _bookService.updateStock(stock, id);
         response.setMessage("Modificado con éxito");
         response.setBody(book);
         return ResponseEntity.ok(response);
@@ -89,11 +90,12 @@ public class BookController {
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<ResponseMessageEntity> deleteBookById(@PathVariable Long id){
         ResponseMessageEntity response = new ResponseMessageEntity();
-        BookEntity book = _bookService.deleteBookById(id);
+        BookEntity book = _bookService.findBookById(id);
         if (book == null) {
             response.setMessage("El libro no existe");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
+        book = _bookService.deleteBookById(id);
         response.setMessage("Borrado con éxito");
         response.setBody(book);
         return ResponseEntity.ok(response);
